@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        /* Your CSS styles... */
+        body {
+    background-image: url('https://www.searchenginejournal.com/wp-content/uploads/2022/10/what-is-a-cms-635928deda3bc-sej.png');
+    background-size: cover;
+    background-repeat: no-repeat;
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 20px;
+    color: white;
+  }
+  .container {
+    background-color: rgba(100, 100, 100, 0.5);
+    padding: 20px;
+    border-radius: 10px;
+  }
+  h1 {
+    font-size: 36px;
+  }
+  p {
+    font-size: 18px;
+  }
+
+    </style>
+    <title>CONTENT MANAGEMENT TOOL</title>
+</head>
+<body>
+    <header>
+        <h1>CONTENT MANAGEMENT TOOL</h1>
+    </header>
+    <main>
+        <div class="container">
+            <div id="blog-editor" class="editor-box">
+                <h2>Create Blog</h2>
+                <form id="blog-form">
+                    <label for="blog-title">Title:</label>
+                    <input type="text" id="blog-title" name="blog-title" required>
+                    <label for="blog-content">Content:</label>
+                    <textarea id="blog-content" name="blog-content" rows="6" required></textarea>
+                    <button class="edit-button" id="create-blog-button">Create Blog</button>
+                </form>
+            </div>
+            <div id="text-editor" class="editor-box">
+                <h2>Text Editor</h2>
+                <div class="drop-zone" id="text-drop-zone" contenteditable="true">
+                    Drag and drop your text content here or start typing.
+                </div>
+            </div>
+            <div id="image-editor" class="editor-box">
+                <h2>Image Editor</h2>
+                <div class="drop-zone" id="image-drop-zone">
+                    Drag and drop your image here or <a href="#" id="upload-image-link">upload an image</a>.
+                </div>
+                <button class="edit-button" id="edit-image-button">Edit Image</button>
+            </div>
+            <div id="video-editor" class="editor-box">
+                <h2>Video Editor</h2>
+                <div class="drop-zone" id="video-drop-zone">
+                    Drag and drop your video here or <a href="#" id="upload-video-link">upload a video</a>.
+                </div>
+                <button class="edit-button" id="edit-video-button">Edit Video</button>
+            </div>
+        </div>
+        <section id="preview">
+            <h2>Preview</h2>
+            <div id="preview-content">
+                <!-- Preview content will be displayed here -->
+            </div>
+        </section>
+    </main>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const textDropZone = document.getElementById('text-drop-zone');
+            const imageDropZone = document.getElementById('image-drop-zone');
+            const videoDropZone = document.getElementById('video-drop-zone');
+            const previewContent = document.getElementById('preview-content');
+            const uploadImageLink = document.getElementById('upload-image-link');
+            const uploadVideoLink = document.getElementById('upload-video-link');
+            const blogForm = document.getElementById('blog-form');
+            const createBlogButton = document.getElementById('create-blog-button');
+
+            uploadImageLink.addEventListener('click', () => {
+                const imageUrl = prompt('Enter the URL of the image:');
+                if (imageUrl) {
+                    const imageElement = document.createElement('img');
+                    imageElement.src = imageUrl;
+                    imageElement.style.maxWidth = '200%';
+                    previewContent.appendChild(imageElement);
+                }
+            });
+
+            uploadVideoLink.addEventListener('click', () => {
+                const videoUrl = prompt('Enter the URL of the video:');
+                if (videoUrl) {
+                    const videoElement = document.createElement('video');
+                    videoElement.src = videoUrl;
+                    videoElement.controls = true;
+                    videoElement.style.maxWidth = '200%';
+                    previewContent.appendChild(videoElement);
+                }
+            });
+
+            function handleDrop(event) {
+                event.preventDefault();
+                const type = event.dataTransfer.getData('type');
+                const content = event.dataTransfer.getData('content');
+
+                const element = document.createElement(type);
+                element.innerHTML = content;
+                element.style.maxWidth = '100%';
+                previewContent.appendChild(element);
+            }
+
+            textDropZone.addEventListener('drop', handleDrop);
+            imageDropZone.addEventListener('drop', handleDrop);
+            videoDropZone.addEventListener('drop', handleDrop);
+
+            function handleDragOver(event) {
+                event.preventDefault();
+            }
+
+            textDropZone.addEventListener('dragover', handleDragOver);
+            imageDropZone.addEventListener('dragover', handleDragOver);
+            videoDropZone.addEventListener('dragover', handleDragOver);
+
+            const editImageButton = document.getElementById('edit-image-button');
+            const editVideoButton = document.getElementById('edit-video-button');
+
+            editImageButton.addEventListener('click', () => {
+                const imageUrl = prompt('Enter the new URL for the image:');
+                if (imageUrl) {
+                    const imageElement = document.querySelector('#preview-content img');
+                    if (imageElement) {
+                        imageElement.src = imageUrl;
+                    }
+                }
+            });
+
+            editVideoButton.addEventListener('click', () => {
+                const videoUrl = prompt('Enter the new URL for the video:');
+                if (videoUrl) {
+                    const videoElement = document.querySelector('#preview-content video');
+                    if (videoElement) {
+                        videoElement.src = videoUrl;
+                    }
+                }
+            });
+
+            textDropZone.addEventListener('input', () => {
+                const textContent = textDropZone.innerHTML;
+                previewContent.innerHTML = textContent;
+            });
+
+            createBlogButton.addEventListener('click', (event) => {
+                event.preventDefault();
+                const blogTitle = document.getElementById('blog-title').value;
+                const blogContent = document.getElementById('blog-content').value;
+
+                const blogContainer = document.createElement('div');
+                const blogTitleElement = document.createElement('h3');
+                blogTitleElement.textContent = blogTitle;
+                const blogContentElement = document.createElement('p');
+                blogContentElement.textContent = blogContent;
+
+                blogContainer.appendChild(blogTitleElement);
+                blogContainer.appendChild(blogContentElement);
+                previewContent.appendChild(blogContainer);
+
+                blogForm.reset();
+            });
+        });
+    </script>
+</body>
+</html>
